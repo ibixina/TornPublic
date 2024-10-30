@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         last used weapon
 // @namespace    last-weapon.zero.nao
-// @version      0.3
+// @version      0.5
 // @description  highlights the last used weapon
 // @author       nao [2669774]
 // @match        https://www.torn.com/loader.php?sid=attack*
