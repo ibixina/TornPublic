@@ -7,12 +7,10 @@
 // @match        https://www.torn.com/loader.php?sid=attack*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=torn.com
 // @grant        none
-
 // @downloadURL https://update.greasyfork.org/scripts/512909/last%20used%20weapon.user.js
 // @updateURL https://update.greasyfork.org/scripts/512909/last%20used%20weapon.meta.js
 // ==/UserScript==
 
-// https://www.torn.com/loader.php?sid=attackData&mode=json&rfcv=670d4e4fb1bf4
 let api = "";
 let url = window.location.href;
 let rfc = getRFC();
