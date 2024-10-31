@@ -1,14 +1,14 @@
 // ==UserScript==
 // @name        Disposal J.A.R.V.I.S.
 // @namespace   disposal-guide.nao.zero
-// @version     1.03
+// @version     1.04
 // @description color disposal options based on safety
 // @author      Terekhov, nao
 // @match       https://www.torn.com/loader.php?sid=crimes*
 // @icon        https://www.google.com/s2/favicons?sz=64&domain=torn.com
 // @grant       none
 // ==/UserScript==
-
+let url = window.location.href;
 const colors = {
   safe: "#40Ab24",
   moderatelySafe: "#A4D497",
@@ -112,11 +112,27 @@ function insert() {
             "border",
             `3px solid ${crimeColor}`,
           );
+            if (crimeDifficulty == "safe"){
+                $(`button[aria-label='${method}']`, $(this)).trigger('click');
+
+            }
         }
       }
     }
     $(this).attr("processed", "true");
   });
+
+    setTimeout(insert, 1000);
 }
 
-setInterval(insert, 1000);
+if (url.includes("disposal")){
+    insert();
+}
+
+$(window).on("hashchange", function (e) {
+    url = window.location.href;
+    if (url.includes("disposal")) {
+        insert();
+    }
+});
+
