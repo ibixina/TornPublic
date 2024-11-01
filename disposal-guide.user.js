@@ -118,10 +118,6 @@ function insert() {
                         "border",
                         `3px solid ${crimeColor}`,
                     );
-                    if (crimeDifficulty == "safe"){
-                        $(`button[aria-label='${method}']`, $(this)).trigger('click');
-
-                    }
                 }
             }
         }
