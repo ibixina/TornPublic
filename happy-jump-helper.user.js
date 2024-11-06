@@ -31,9 +31,9 @@ if (!localStorage.happyhelper && itemOrder.length > 0) {
 }
 
 let itemIds = {
-  xanax: 111,
-  edvd: 111,
-  ecstacy: 111,
+  xanax: 206,
+  edvd: 366,
+  ecstacy: 197,
 };
 
 function getRFC() {
@@ -61,11 +61,22 @@ function useItem(itemId, useFac = "0") {
     function (response) {
       response = JSON.parse(response);
       $(".items-name").html(response.text);
-      console.log(response.text);
 
-      localStorage.happyhelper += 1;
+      if (true) {
+        localStorage.happyhelper =
+          (localStorage.happyhelper * 1 + 1) % itemOrder.length;
+
+        updateButton();
+      }
+      console.log(response.text);
     },
   );
+}
+
+function updateButton() {
+  let currItem = localStorage.happyhelper;
+  $("#hhitem").html(itemOrder[currItem]);
+  $("#hhitem").attr("item", itemOrder[currItem]);
 }
 
 function insert() {
@@ -89,7 +100,8 @@ function insert() {
 
   $("#hhreset").on("click", () => {
     if (itemOrder.length > 0) {
-      localStorage.happyjumper = 0;
+      localStorage.happyhelper = 0;
+      updateButton();
     } else {
       alert("You need to have at least one item in item order");
     }
