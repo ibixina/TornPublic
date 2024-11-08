@@ -62,9 +62,13 @@ function useItem(itemId, useFac = "0") {
       response = JSON.parse(response);
       $(".items-name").html(response.text);
 
-      if (true) {
-        localStorage.happyhelper =
-          (localStorage.happyhelper * 1 + 1) % itemOrder.length;
+      if (response.success) {
+        if (response.text.includes("overdose")) {
+          localStorage.happyhelper = 0;
+        } else {
+          localStorage.happyhelper =
+            (localStorage.happyhelper * 1 + 1) % itemOrder.length;
+        }
 
         updateButton();
       }
