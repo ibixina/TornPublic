@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         happy-jumper
 // @namespace    happy-jumper.zero.nao
-// @version      0.1
+// @version      0.2
 // @description  tracks happy jumps
 // @author       nao [2669774]
 // @match        https://www.torn.com/item.php*
