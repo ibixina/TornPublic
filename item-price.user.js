@@ -10,7 +10,7 @@
 
 // ==/UserScript==
 
-let api = "AqCthUQl7gyqWsU6";
+let api = "###PDA-APIKEY###";
 let url = window.location.href;
 let rfc = getRFC();
 let data;
