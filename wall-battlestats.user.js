@@ -3,7 +3,7 @@
 // @namespace   seintz.torn.wall-battlestats
 // @version     6.3.1.4
 // @description show tornstats spies on faction wall page (add your TornStats API in line 18)
-// @author      finally [2060206], seintz [2460991], Shade [3129695], Kindly [1956699], Mr_Bob [479620]
+// @author      finally [2060206], seintz [2460991], Shade [3129695], Kindly [1956699], Mr_Bob [479620], nao
 // @license     GNU GPLv3
 // @run-at      document-end
 // @match       https://www.torn.com/factions.php*
@@ -15,8 +15,8 @@
 // @updateURL https://update.greasyfork.org/scripts/500329/Wall%20Battlestats%20Colored.meta.js
 // ==/UserScript==
 
-const tornapi = `wgRO1oI5QmT4Exy1`;
-const apiKey = "TS_gTuTk1XylYdpkyjq";
+const tornapi = ``;
+const apiKey = "";
 var colors = ["black", "red", "green", "blue", "orange"]; // total, str, def, spd, dex
 var whore_threshold = 0.35;
 var ff_threshold = 2;
@@ -29,6 +29,12 @@ var borderThickness = 1;
  */
 
 let factionData = {};
+let factions = [];
+
+const countries = {
+  "United Kingdom": "UK",
+  "South Africa": "SA",
+};
 
 let myBSScore = localStorage.getItem("myBSScore") || 0;
 let ff = 0;
@@ -57,7 +63,7 @@ function JSONparse(str) {
   try {
     return JSON.parse(str);
   } catch (e) {
-    console.log(e);
+    //console.log(e);
   }
   return null;
 }
@@ -110,52 +116,61 @@ function loadTSFactions(id) {
   });
 }
 
-function getFactionData() {
-  GM_xmlhttpRequest({
-    method: "GET",
-    url: ` https://api.torn.com/faction/?selections=&key=${tornapi}&comment=wallbs`,
-    onload: (r) => {
-      let data = JSON.parse(r.responseText);
-      console.log(data);
-      for (const memId in data.members) {
-        const memData = data.members[memId];
-        const memState = memData.status.state;
+async function getFactionData() {
+  console.log(factionData);
+  for (const factionId of factions) {
+    console.log(factionId);
+    let data = await $.getJSON(
+      `https://api.torn.com/faction/${factionId}?selections=&key=${tornapi}&comment=wallbs`,
+    );
+    for (const memId in data.members) {
+      const memData = data.members[memId];
+      const memState = memData.status.state;
 
-        if (memState == "Traveling" || memState == "Abroad") {
-          let country = "";
-          const desc = memData.status.description;
-          if (desc.includes("Returning")) {
-            country += "<- " + desc.split("from ")[1];
-          } else if (desc.includes("Traveling to")) {
-            country = "-> " + desc.split("to ")[1];
-          } else {
-            country = desc.split("in ")[1];
-          }
-          factionData[memId] = country;
+      if (memState == "Traveling" || memState == "Abroad") {
+        let country = "";
+        const desc = memData.status.description;
+        if (desc.includes("Returning")) {
+          country = desc.split("from ")[1];
+          country = countries[country] || country;
+          country = "<-" + country;
+        } else if (desc.includes("Traveling to")) {
+          country = desc.split("to ")[1];
+          country = countries[country] || country;
+          country = "->" + country;
         } else {
-          if (factionData[memId]) {
-            delete factionData[memId];
-          }
+          country = desc.split("In ")[1];
+          country = countries[country] || country;
+        }
+        factionData[memId] = country;
+      } else {
+        if (factionData[memId]) {
+          delete factionData[memId];
         }
       }
-      updateStateTravellers();
-    },
-    onerror: () => {
-      alert("There was an error getting the data");
-    },
-    ontimeout: () => {
-      alert("Time out");
-    },
-  });
+    }
+    updateStateTravellers();
+  }
 }
 
 function updateStateTravellers() {
   $(".traveling").each(function () {
     const parent = $(this).parent();
-    const userId = $("a[href*='user2ID=']", $(parent))
-      .attr("href")
-      .split("user2ID=")[1];
-    if (factionData[userId]) {
+    const userLink = $("a[href*='XID=']", $(parent))[0];
+    const userId = userLink
+      ? $(userLink).attr("href").split("XID=")[1]
+      : undefined;
+    if (userId && factionData[userId]) {
+      $(this).html(factionData[userId]);
+    }
+  });
+  $(".abroad").each(function () {
+    const parent = $(this).parent();
+    const userLink = $("a[href*='XID=']", $(parent))[0];
+    const userId = userLink
+      ? $(userLink).attr("href").split("XID=")[1]
+      : undefined;
+    if (userId && factionData[userId]) {
       $(this).html(factionData[userId]);
     }
   });
@@ -200,6 +215,7 @@ function loadFactions() {
   )
     .map((a) => a.href.replace(/.*?ID=(\d+)$/, "$1"))
     .filter((v, i, a) => a.indexOf(v) === i);
+  factions = factionIds;
   factionIds.forEach((id) => loadTSFactions(id));
 }
 
