@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Stock Name
-// @namespace    stock-name2.nao.zero
-// @version      0.1
+// @namespace    stock-name.nao.zero
+// @version      0.3
 // @description  stock name and more
 // @author       nao [2669774]
 // @match        https://www.torn.com/page.php?sid=stocks*
@@ -129,19 +129,16 @@ function change() {
       let current_value = totalOwned * currentPrice;
       let bought_value = 0;
       let last_date;
-
-      let insertTitle = `<span style="color:${color};">
-                <b>${sym}</b> </br>
-                <b>Value:</b> $${current_value} </br>
-                <b>Transactions:</b> ${last_date}
-                `;
+      let insertTitle = ``;
 
       for (let transaction of stocksData[sym].transactions) {
         last_date = transaction.date;
         bought_value += transaction.amount * transaction.boughtPrice;
-        let net = (current_value - bought_value) * transaction.amount;
+        let net = (currentPrice - transaction.boughtPrice) * transaction.amount;
+        let tcol = net >= 0 ? "green" : "red";
         net = net.toLocaleString();
-        let tinsert = `<b>Date:</b>${transaction.date} <b>Amt: </d>${transaction.amount}<b>Net: </b>$${net}</br>`;
+
+        let tinsert = `<span style="color:${tcol};"><b>Date: </b>${transaction.date}<b> Amt: </d>${transaction.amount}<b> Net: </b>$${net}</br></span>`;
         insertTitle += tinsert;
       }
 
@@ -149,6 +146,12 @@ function change() {
       let profit = current_value - bought_value;
       current_value = current_value.toLocaleString();
       profit = profit.toLocaleString();
+      insertTitle =
+        `<span style="color:${color};">
+                <b>${sym}</b> </br>
+                <b>Value:</b> $${current_value} </br>
+                <b>Transactions:</b></br>
+                ` + insertTitle;
 
       insertTitle += `
                 <b>Profit:</b> $${profit} </br>
