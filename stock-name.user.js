@@ -147,7 +147,7 @@ function change() {
                 <b>Last Transaction:</b> ${last_date}
                 </span>`;
 
-      if (window.innerWidth <= 768) {
+      if (window.innerWidth >= 768) {
         // Check if device is a phone (screen width <= 768px)
         $("img", $(this)).attr("title", insertTitle);
       }
