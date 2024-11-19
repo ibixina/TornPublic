@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Stock Name
 // @namespace    stock-name.nao.zero
-// @version      0.2
+// @version      0.3
 // @description  stock name and more
 // @author       nao [2669774]
 // @match        https://www.torn.com/page.php?sid=stocks*
