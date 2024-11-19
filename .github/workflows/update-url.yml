@@ -1,0 +1,35 @@
+name: Update Tampermonkey Metadata
+
+on:
+  push:
+    branches:
+      - main  # Adjust this if your default branch is different
+
+jobs:
+  update-metadata:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Update Tampermonkey URLs
+      run: |
+        # Base raw GitHub URL
+        BASE_RAW_URL="https://raw.githubusercontent.com/${{ github.repository }}/${{ github.ref_name }}"
+        
+        # Loop through all .user.js files in the repository
+        for script in *.user.js; do
+          RAW_URL="${BASE_RAW_URL}/${script}"
+          sed -i "s|<UPDATE_URL>|${RAW_URL}|g" "$script"
+          sed -i "s|<DOWNLOAD_URL>|${RAW_URL}|g" "$script"
+        done
+
+    - name: Commit and Push Changes
+      run: |
+        git config --local user.name "github-actions[bot]"
+        git config --local user.email "github-actions[bot]@users.noreply.github.com"
+        git add *.user.js
+        git commit -m "Update Tampermonkey URLs for all scripts"
+        git push
+
