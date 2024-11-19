@@ -147,7 +147,10 @@ function change() {
                 <b>Last Transaction:</b> ${last_date}
                 </span>`;
 
-      $("img", $(this)).attr("title", insertTitle);
+      if (window.innerWidth <= 768) {
+        // Check if device is a phone (screen width <= 768px)
+        $("img", $(this)).attr("title", insertTitle);
+      }
 
       $(parent).parent().off("click");
       $(parent)
