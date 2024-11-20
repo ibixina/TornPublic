@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         template
-// @namespace    template.zero.nao
+// @name         last-action
+// @namespace    last-action.zero.nao
 // @version      0.1
-// @description  try to tke over the world!
+// @description  shows last action on profile page
 // @author       nao [2669774]
 // @match        https://www.torn.com*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=torn.com
