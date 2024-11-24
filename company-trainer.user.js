@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Company Trainer
 // @namespace    trainer.zero.torn
-// @version      0.1
+// @version      0.3
 // @description  company training tracker
 // @author       nao
 // @match        https://www.torn.com/companies.php*
@@ -11,7 +11,7 @@
 
 GM_addStyle(`
 .trainOrder {
-    width: 100%;
+width: 100%;
 }
 
 `);
@@ -22,16 +22,6 @@ function getData() {
   let tempValue = localStorage.trainsOrdered || "{}";
   tempValue = JSON.parse(tempValue);
   return tempValue;
-}
-
-function hideButton() {
-  const currentStatus = $(".fire").css("visibility");
-  let displayStatus = currentStatus === "hidden" ? "visible" : "hidden";
-
-  GM_addStyle(`
-.fire {
-    visibility: ${displayStatus};
-}`);
 }
 
 function updateData() {
@@ -86,6 +76,22 @@ function train(id) {
     },
   );
 }
+let displayUpdated = false;
+function updateTrainDisplay() {
+  if (displayUpdated) {
+    return;
+  }
+
+  if ($(".torn-btn", $(".fire")).length > 0) {
+    GM_addStyle(`
+
+        .zeroTrain {
+        width: 110px;
+        margin: 10px 0px 10px 10px;
+        }
+`);
+  }
+}
 
 function insert() {
   let url = window.location.href;
@@ -104,7 +110,7 @@ function insert() {
       );
       if (trains[userid] && trains[userid] > 0) {
         $(".train", $(this)).html(
-          `<button class="torn-btn" id="train${userid}">T</button>`,
+          `<button class="torn-btn zeroTrain" id="train${userid}">T</button>`,
         );
         $(`#train${userid}`).on("click", function () {
           train(userid);
@@ -121,16 +127,13 @@ function insert() {
     //    );
 
     $("div.title:nth-child(1)").append(
-      `<button id="updateTrains" class="torn-btn">Update Trains</button>
-      <button id="hideButton" class="torn-btn">Toggle Fire</button>`,
+      `<button id="updateTrains" class="torn-btn">Update Trains</button>`,
     );
     $("#updateTrains").on("click", function () {
       update();
     });
-    $("#hideButton").on("click", function () {
-      hideButton();
-    });
   }
+  updateTrainDisplay();
   setTimeout(insert, 1000);
 }
 
