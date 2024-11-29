@@ -89,18 +89,18 @@ function update() {
   const minutes = Math.floor(secondsLeft / 60);
   const seconds = secondsLeft % 60;
 
+  if (secondsLeft <= 0) {
+    clearInterval(timer);
+    $(".timer-container").css("display", "none");
+    return;
+  }
+
   if (secondsLeft <= 20) {
     $(".timer-container").css("color", "red");
     if (alerted == false) {
       playAlertSound();
       alerted = true;
     }
-  }
-
-  if (secondsLeft <= 0) {
-    clearInterval(timer);
-    $(".timer-container").css("display", "none");
-    return;
   }
 
   $("#hour").html(minutes);
