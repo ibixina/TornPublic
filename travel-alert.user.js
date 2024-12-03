@@ -116,6 +116,14 @@ function update() {
 
 function playAlertSound() {
   alertSound.volume = 0.5;
+  alertSound.addEventListener(
+    "ended",
+    function () {
+      this.currentTime = 0;
+      this.play();
+    },
+    false,
+  );
   alertSound.play().catch((error) => {
     console.error("Error playing alert sound:", error);
   });
