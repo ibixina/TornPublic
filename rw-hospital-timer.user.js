@@ -4,7 +4,7 @@
 // @version      0.1
 // @description  shows remaining hospital time in rw
 // @author       nao [2669774]
-// @match        https://www.torn.com/factions.php?step=profile*
+// @match        https://www.torn.com/factions.php*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=torn.com
 // @grant        none
 // @updateURL    <UPDATE_URL>
@@ -16,6 +16,8 @@ let api = "";
 const interval = 10;
 let url = window.location.href;
 let rfc = getRFC();
+
+let timethreshold = 5;
 
 let userData = {};
 
@@ -82,6 +84,14 @@ function updateTimer() {
   $(".timer").each(function () {
     let currentTime = $(this).attr("timer");
     let newTime = Math.max(0, currentTime - 1);
+
+    if (newTime < timethreshold * 60 && newTime > 0) {
+      $(this).parent().css("background", "rgba(32, 64, 125, 0.5)");
+    }
+    if (newTime == 0) {
+      $(this).parent().css("background", "rgba(32, 64, 125, 0)");
+    }
+
     $(this).attr("timer", newTime);
 
     $(this).text(convertTime(newTime));
