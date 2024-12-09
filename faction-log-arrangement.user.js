@@ -16,21 +16,21 @@ let api = "";
 let url = window.location.href;
 let rfc = getRFC();
 let factionMembers = [];
+let factionMemberNames = {};
 
 async function main() {
-  console.log("faction");
-  await getFactionMembers();
-  console.log(factionMembers);
   insert();
-  console.log("arrange");
   arrange();
-  setInterval(arrange, 5000);
+  setInterval(arrange, 2000);
 }
 async function getFactionMembers() {
   const response = await $.getJSON(
     `https://api.torn.com/faction/?selections=&key=${api}`,
   );
-  factionMembers = Object.keys(response.members);
+  for (const member in response.members) {
+    factionMembers.push(member);
+    factionMemberNames[member] = response.members[member].name;
+  }
 }
 
 function getRFC() {
@@ -54,7 +54,7 @@ function insert() {
   }
 
   let container = document.createElement("div");
-  container.id = "attacking-container";
+  container.id = "logs-container";
 
   const ul = document.querySelector("ul[class^='listWrapper_']");
   ul.insertBefore(container, ul.firstChild);
@@ -74,7 +74,7 @@ function arrange() {
 }
 
 function addEl(el, id) {
-  const container = document.getElementById("attacking-container");
+  const container = document.getElementById("logs-container");
   let childEl = container.querySelector(`#user-${id}`);
   if (childEl) {
     const childContainer = childEl.querySelector(".logs");
@@ -96,10 +96,13 @@ function addEl(el, id) {
     const link = document.createElement("a");
     link.href = `https://www.torn.com/profiles.php?XID=${id}`;
     link.style.flex = "1";
-    const img = document.createElement("img");
-    img.src = `https://www.torn.com/sigs/19_${id}.png`;
-    img.style.width = "50%";
-    link.appendChild(img);
+    link.textContent = factionMemberNames[id] + " (" + id + ")";
+
+    link.style.color = `var(--default-blue-color)`;
+    //const img = document.createElement("img");
+    //img.src = `https://www.torn.com/sigs/19_${id}.png`;
+    //img.style.width = "50%";
+    //link.appendChild(img);
 
     // Create the button
     const button = document.createElement("button");
@@ -132,18 +135,9 @@ function addEl(el, id) {
   }
 }
 
-if (
-  window.location.href.includes("type=2") ||
-  window.location.href.includes("type=3")
-) {
-  main();
-}
+getFactionMembers();
+main();
 
-$(document).on("hashchange", function () {
-  if (
-    window.location.href.includes("type=2") ||
-    window.location.href.includes("type=3")
-  ) {
-    main();
-  }
+$(document).on("click", "button[class^='tab_']", function () {
+  window.location.reload();
 });
