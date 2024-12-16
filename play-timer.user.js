@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         play-time-advanced-search
 // @namespace    play-time-advanced-search.zero.nao
-// @version      0.1
+// @version      0.2
 // @description  shows play time of users in torn.com
 // @author       nao [2669774]
 // @match        https://www.torn.com/page.php?sid=UserList*
@@ -38,9 +38,11 @@ function convertTime(seconds) {
 
 if (window.location.href.includes("UserList")) {
   $(document).on("click", ".level", async function () {
-    const parent = $(this).parents("li[class^='user']");
+    const parent = $(this).parents("li");
     if (parent.length > 0) {
-      const id = parent.attr("class").replace("user", "");
+      const id = $("a[href*='profiles.php?XID=']", parent)
+        .attr("href")
+        .split("XID=")[1];
       const playtime = await getTime(id);
       const time = convertTime(playtime);
       $(this).attr("title", `Time played: ${time} minutes`);
