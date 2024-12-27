@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         rw-timer
 // @namespace    rw-timer.zero.nao
-// @version      0.1
+// @version      0.2
 // @description  shows remaining hospital time in rw
 // @author       nao [2669774]
 // @match        https://www.torn.com/factions.php*
@@ -12,7 +12,20 @@
 
 // ==/UserScript==
 
-let api = "";
+if (!localStorage.getItem("api_nao")) {
+  const api = prompt("Please enter your api key: ");
+  const response = await $.getJSON(
+    `https://api.torn.com/user/?selections=&key=${api}`,
+  );
+  if (response.error) {
+    alert("Invalid API key");
+    return;
+  }
+  alert("API key set");
+  localStorage.setItem("api_nao", api);
+}
+
+let api = localStorage.getItem("api_nao");
 const interval = 10;
 let url = window.location.href;
 let rfc = getRFC();
