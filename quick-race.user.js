@@ -7,8 +7,8 @@
 // @match        https://www.torn.com/loader.php?sid=racing*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=torn.com
 // @grant        GM_addStyle
-// @updateURL    <UPDATE_URL>
-// @downloadURL  <DOWNLOAD_URL>
+// @updateURL    https://raw.githubusercontent.com/ibixina/TornPublic/main/quick-race.user.js
+// @downloadURL  https://raw.githubusercontent.com/ibixina/TornPublic/main/quick-race.user.js
 
 // ==/UserScript==
 //
