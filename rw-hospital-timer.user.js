@@ -12,7 +12,7 @@
 
 // ==/UserScript==
 
-if (!localStorage.getItem("api_nao")) {
+if (!localStorage.getItem("api_nao") || localStorage.getItem("api_nao") == "") {
   const api = prompt("Please enter your api key: ");
   const response = await $.getJSON(
     `https://api.torn.com/user/?selections=&key=${api}`,
@@ -62,6 +62,11 @@ async function getFactionData(id) {
 
     const url = `https://api.torn.com/faction/${factionId}?selections=&key=${api}`;
     const response = await $.getJSON(url);
+    if (response.error) {
+      console.log("Error:", response.error);
+      localStorage.removeItem("api_nao");
+      return;
+    }
     checked.push(factionId);
 
     for (const member in response.members) {
