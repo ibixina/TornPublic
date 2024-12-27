@@ -41,8 +41,6 @@ if (!localStorage.getItem("racesNao")) {
 let races = JSON.parse(localStorage.getItem("racesNao"));
 let lastRaceInfo;
 
-let api = localStorage.getItem("api_full");
-let url = window.location.href;
 let rfc = getRFC();
 
 function getRFC() {
@@ -162,6 +160,8 @@ function startRace(raceId) {
   let raceLink = `https://www.torn.com/page.php?sid=racing&tab=customrace&section=getInRace&step=getInRace&id=&carID=${carId}&createRace=true&title=${raceName}&minDrivers=${minDrivers}&maxDrivers=${maxDrivers}&trackID=${trackId}&laps=${laps}&minClass=${minClass}&carsTypeAllowed=${carsTypeAllowed}&carsAllowed=${carsAllowed}&betAmount=${betAmount}&waitTime=0&rfcv=${getRFC()}`;
   $.post(raceLink, function (response) {
     console.log("Race started");
+    const saveButton = document.querySelector(".save-button");
+    saveButton.classList.remove("blinking");
   });
 }
 
