@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         racenao
 // @namespace    racenao.zero.nao
-// @version      0.1
+// @version      0.2
 // @description  race helper for torn
 // @author       nao [2669774]
 // @match        https://www.torn.com/loader.php?sid=racing*
@@ -181,7 +181,7 @@ $.ajax = function (options) {
     }
 
     const saveButton = document.querySelector(".save-button");
-    if (lastRaceInfo) {
+    if (lastRaceInfo && lastRaceInfo.title) {
       saveButton.classList.add("blinking");
     } else {
       saveButton.classList.remove("blinking");
