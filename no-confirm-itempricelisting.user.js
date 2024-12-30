@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         one-click-listing-itemprice
 // @namespace    one-click-listing.zero.nao
-// @version      0.2
+// @version      0.3
 // @description  one click listing in the item market based on the item market price, updated for bazaar
 // @author       nao [2669774]
 // @match        https://www.torn.com/bazaar.php*
@@ -62,12 +62,16 @@ function insert() {
       itemprice = itemprice * ((100 + 1 * localStorage.itemPricePerc) / 100);
       itemprice = Math.round(itemprice);
 
-      const name = $(".name-wrap", parent).text().match(/x\d+/g);
-      const qty = parseInt(name[0].slice(1));
+      const qty = 9999999999999;
 
       const amountInput = $(".amount > input", parent)[0];
-      amountInput.value = qty;
-      amountInput.dispatchEvent(new Event("input", { bubbles: true }));
+      if (amountInput) {
+        amountInput.value = qty;
+        amountInput.dispatchEvent(new Event("input", { bubbles: true }));
+      }
+      if ($(".amount > input")) {
+        $(".amount > input").click();
+      }
 
       $(".price > div > input", parent).val(itemprice).trigger("input");
     });
@@ -101,11 +105,13 @@ function update() {
 }
 
 function main() {
-  insertPerc();
   if (window.location.href.includes("add")) {
+    insertPerc();
     setInterval(insert, 1000);
   } else if (window.location.href.includes("manage")) {
     setInterval(update, 1000);
+  } else {
+    setTimeout(main, 2000);
   }
 }
 
