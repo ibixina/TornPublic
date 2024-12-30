@@ -1,10 +1,10 @@
 // ==UserScript==
 // @name         one-click-listing-itemprice
 // @namespace    one-click-listing.zero.nao
-// @version      0.1
-// @description  one click listing in the item market based on the item market price
+// @version      0.2
+// @description  one click listing in the item market based on the item market price, updated for bazaar
 // @author       nao [2669774]
-// @match        https://www.torn.com/page.php?sid=ItemMarket*
+// @match        https://www.torn.com/bazaar.php*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=torn.com
 // @grant        none
 
@@ -46,35 +46,67 @@ function insertPerc() {
 }
 
 function insert() {
-  $("div[class^='itemRowWrapper_']:not([processed])").each(function () {
-    let itemid = $("img[src^='/images/items']", $(this))
-      .attr("src")
-      .split("items/")[1]
-      .split("/")[0];
+  $(".items-cont > li:not([processed])").each(function () {
+    let img = $("img[src^='/images/items']", $(this));
+    if (img.length == 0) return;
 
-    $("img", $(this)).css("background", "rgba(159, 42, 202, 0.5)");
-    $(`img`, $(this)).on("click", async function (e) {
+    const itemid = $(img).attr("src").split("items/")[1].split("/")[0];
+
+    const parent = $(this);
+
+    $(img).css("background", "rgba(159, 42, 202, 0.5)");
+    $(img).on("click", async function (e) {
       e.stopPropagation();
 
-      let parent = $(this).parents('div[class^="itemRowWrapper"]');
       let itemprice = await getItemPrice(itemid);
       itemprice = itemprice * ((100 + 1 * localStorage.itemPricePerc) / 100);
       itemprice = Math.round(itemprice);
-      if ($(".input-money-symbol > input", $(parent)).length > 0) {
-        $(".input-money-symbol", $(parent)).trigger("click");
-      }
 
-      if ($("input[id^='itemRow-selectCheckbox']", $(parent)).length > 0) {
-        $("input[id^='itemRow-selectCheckbox']", $(parent)).trigger("click");
-      }
+      const name = $(".name-wrap", parent).text().match(/x\d+/g);
+      const qty = parseInt(name[0].slice(1));
 
-      let inputsWrapper = $("div[class^='priceInputWrapper_']", $(parent));
-      $("input", $(inputsWrapper)).val(itemprice).trigger("input");
+      const amountInput = $(".amount > input", parent)[0];
+      amountInput.value = qty;
+      amountInput.dispatchEvent(new Event("input", { bubbles: true }));
+
+      $(".price > div > input", parent).val(itemprice).trigger("input");
     });
 
     $(this).attr("processed", true);
   });
 }
 
-insertPerc();
-setInterval(insert, 1000);
+function update() {
+  $("div[class^='row_']").each(function () {
+    let img = $("img[src^='/images/items']", $(this));
+    if (img.length == 0) return;
+
+    const itemid = $(img).attr("src").split("items/")[1].split("/")[0];
+
+    const parent = $(this);
+
+    $(img).css("background", "rgba(159, 42, 202, 0.5)");
+    $(img).on("click", async function (e) {
+      e.stopPropagation();
+
+      let itemprice = await getItemPrice(itemid);
+      itemprice = itemprice * ((100 + 1 * localStorage.itemPricePerc) / 100);
+      itemprice = Math.round(itemprice);
+
+      $(".input-money", parent).val(itemprice).trigger("input");
+    });
+
+    $(this).attr("processed", true);
+  });
+}
+
+function main() {
+  if (window.location.href.includes("add")) {
+    insertPerc();
+    setInterval(insert, 1000);
+  } else if (window.location.href.includes("manage")) {
+    setInterval(update, 1000);
+  }
+}
+
+main();
