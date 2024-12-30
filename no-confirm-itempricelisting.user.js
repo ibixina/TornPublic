@@ -101,8 +101,8 @@ function update() {
 }
 
 function main() {
+  insertPerc();
   if (window.location.href.includes("add")) {
-    insertPerc();
     setInterval(insert, 1000);
   } else if (window.location.href.includes("manage")) {
     setInterval(update, 1000);
