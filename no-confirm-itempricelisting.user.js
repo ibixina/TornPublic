@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         one-click-listing-itemprice
 // @namespace    one-click-listing.zero.nao
-// @version      0.3
+// @version      0.5
 // @description  one click listing in the item market based on the item market price, updated for bazaar
 // @author       nao [2669774]
 // @match        https://www.torn.com/bazaar.php*
@@ -69,8 +69,8 @@ function insert() {
         amountInput.value = qty;
         amountInput.dispatchEvent(new Event("input", { bubbles: true }));
       }
-      if ($(".amount > input")) {
-        $(".amount > input").click();
+      if ($(".amount > input", parent)) {
+        $(".amount > input", parent).click();
       }
 
       $(".price > div > input", parent).val(itemprice).trigger("input");
