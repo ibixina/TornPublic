@@ -41,6 +41,8 @@ const styleSheet = document.createElement("style");
 styleSheet.textContent = modalStyles;
 (document.head || document.documentElement).appendChild(styleSheet);
 
+let toHide = [];
+
 let stocksData = {};
 const { fetch: origFetch } = window;
 window.fetch = async (...args) => {
@@ -58,6 +60,10 @@ window.fetch = async (...args) => {
             const currentPrice = stockData.sharesPrice.chartData[1].value;
             const transactions = stockData.userOwned.transactions;
             const totalOwned = stockData.userOwned.sharesAmount;
+
+            if (totalOwned % 10000 == 0 && toHide.indexOf(symbol) == -1) {
+              toHide.push(symbol);
+            }
             stocksData[symbol] = {
               totalOwned: totalOwned,
               current_price: currentPrice,
@@ -122,6 +128,11 @@ function change() {
       .split("logos/")[1]
       .split(".svg")[0];
     const parent = $("img", $(this)).parent();
+
+    if (toHide.indexOf(sym) != -1) {
+      $(this).hide();
+      return;
+    }
 
     if (stocksData[sym] && stocksData[sym].totalOwned) {
       let totalOwned = stocksData[sym].totalOwned;
