@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Stock Name
 // @namespace    stock-name.nao.zero
-// @version      0.3
+// @version      0.5
 // @description  stock name and more
 // @author       nao [2669774]
 // @match        https://www.torn.com/page.php?sid=stocks*
@@ -194,3 +194,29 @@ function change() {
     }
   });
 }
+
+function insertHideOption() {
+  const inserPoint = document.querySelector("div[class^='titleContainer_']");
+  if (!inserPoint) {
+    setTimeout(insertHideOption, 300);
+    return;
+  }
+
+  const checkBox = document.createElement("input");
+  checkBox.type = "checkbox";
+  checkBox.id = "hideStocks";
+  checkBox.checked = hideStocks;
+  checkBox.onchange = function () {
+    hideStocks = checkBox.checked;
+    localStorage.setItem("hideStocks", hideStocks);
+    window.location.reload();
+  };
+
+  const label = document.createElement("label");
+  label.htmlFor = "hideStocks";
+  label.innerText = "Hide stocks: ";
+
+  inserPoint.appendChild(label);
+  inserPoint.appendChild(checkBox);
+}
+insertHideOption();
