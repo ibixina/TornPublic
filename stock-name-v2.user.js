@@ -41,6 +41,12 @@ const styleSheet = document.createElement("style");
 styleSheet.textContent = modalStyles;
 (document.head || document.documentElement).appendChild(styleSheet);
 
+if (!localStorage.getItem("hideStocks")) {
+  localStorage.setItem("hideStocks", false);
+}
+
+let hideStocks = localStorage.getItem("hideStocks") == "true";
+
 let toHide = [];
 
 let stocksData = {};
@@ -129,7 +135,7 @@ function change() {
       .split(".svg")[0];
     const parent = $("img", $(this)).parent();
 
-    if (toHide.indexOf(sym) != -1) {
+    if (hideStocks && toHide.indexOf(sym) != -1) {
       $(this).hide();
       return;
     }
