@@ -9,8 +9,8 @@
 // @grant        none
 <<<<<<< HEAD
 // @run-at       document-start
-// @updateURL    <UPDATE_URL>
-// @downloadURL  <DOWNLOAD_URL>
+// @updateURL    https://raw.githubusercontent.com/ibixina/TornPublic/main/execute.user.js
+// @downloadURL  https://raw.githubusercontent.com/ibixina/TornPublic/main/execute.user.js
 =======
 // @updateURL    https://raw.githubusercontent.com/ibixina/TornPublic/main/execute.user.js
 // @downloadURL  https://raw.githubusercontent.com/ibixina/TornPublic/main/execute.user.js
