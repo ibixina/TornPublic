@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         execute
 // @namespace    execute.zero.nao
-// @version      0.1
+// @version      0.2
 // @description  execute highlight
 // @author       nao [2669774]
 // @match        https://www.torn.com/loader.php?sid=attack*
