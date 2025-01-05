@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         execute
 // @namespace    execute.zero.nao
-// @version      0.2
+// @version      0.3
 // @description  execute highlight
 // @author       nao [2669774]
 // @match        https://www.torn.com/loader.php?sid=attack*
@@ -31,7 +31,7 @@ window.fetch = async (...args) => {
       console.log(bonuses);
       for (const bonus in bonuses) {
         const bonusData = bonuses[bonus];
-        if (bonusData.title === "Execute" || true) {
+        if (bonusData.title === "Execute") {
           const executePercent = bonusData.value;
           const defenderLife = body?.DB?.defenderUser?.life || 0;
           const maxLife = body?.DB?.defenderUser?.maxlife - 0 || 0;
@@ -41,7 +41,7 @@ window.fetch = async (...args) => {
 
           console.log(executePercent, defenderLife, maxLife);
 
-          if (defenderLife < executeThreshold || true) {
+          if (defenderLife < executeThreshold) {
             const weaponElement = document.querySelector("#weapon_second");
             if (weaponElement) {
               weaponElement.style.backgroundColor = "red";
