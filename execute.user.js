@@ -7,16 +7,11 @@
 // @match        https://www.torn.com/loader.php?sid=attack*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=torn.com
 // @grant        none
-<<<<<<< HEAD
 // @run-at       document-start
-// @updateURL    <UPDATE_URL>
-// @downloadURL  <DOWNLOAD_URL>
-=======
 // @updateURL    https://raw.githubusercontent.com/ibixina/TornPublic/main/execute.user.js
 // @downloadURL  https://raw.githubusercontent.com/ibixina/TornPublic/main/execute.user.js
->>>>>>> f102603663bf9306ae2c31159234b5627a2e5e5e
-
 // ==/UserScript==
+
 const { fetch: origFetch } = window;
 let percentage = 0;
 
