@@ -13,7 +13,13 @@
 // ==/UserScript==
 
 $(document).on("click", ".input-money-symbol", function () {
-  const parent = $(this).parents("li[class^='rowWrapper_']");
+  let parent = $(this).parents("li[class^='rowWrapper_']");
+  let current = parent;
+  if (parent.length === 0) {
+    parent = $("li[class*='expanded']");
+    current = $(this).parents("li[class^='buyDialog_']");
+  }
+  console.log(parent);
   const price = $("div[class^='price_']", parent)
     .text()
     .trim()
@@ -23,9 +29,11 @@ $(document).on("click", ".input-money-symbol", function () {
     parseInt(document.getElementById("user-money").getAttribute("data-money")),
   );
 
+  console.log(price, money);
+
   const qty = Math.floor(money / parseInt(price));
 
-  const qtyInput = $(".input-money", parent);
+  const qtyInput = $(".input-money", current);
   $(qtyInput).val(qty);
   $(qtyInput).trigger("input").trigger("input");
 });
