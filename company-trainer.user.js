@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Company Trainer
 // @namespace    trainer.zero.torn
-// @version      0.3
+// @version      0.4
 // @description  company training tracker
 // @author       nao
 // @match        https://www.torn.com/companies.php*
@@ -99,41 +99,35 @@ function insert() {
     return;
   }
 
-  if (
-    $(".employee-list > li").length > 0 &&
-    $('a[href^="?step=trainemp"]').length > 0
-  ) {
-    $(".employee-list > li").each(function () {
+  if ($(".employee-list > li").length > 0) {
+    $(".employee-list > li:not([processed])").each(function () {
+      console.log("here");
       let userid = $(this).attr("data-user");
       $(".days", $(this)).html(
         `<input type="text" userid="${userid}" class="trainOrder">`,
       );
+
       if (trains[userid] && trains[userid] > 0) {
-        $(".train", $(this)).html(
-          `<button class="torn-btn zeroTrain" id="train${userid}">T</button>`,
-        );
-        $(`#train${userid}`).on("click", function () {
+        $(".train", $(this)).on("click", function (e) {
+          e.stopPropagation();
+          e.preventDefault();
           train(userid);
         });
       } else {
         $(".train", $(this)).html("N/A");
       }
+      $(this).attr("processed", true);
+      updateDisplayValue();
     });
-    updateDisplayValue();
-    //
-    //    $(".submit-changes").append(
-    //      `<button id="updateTrains" class="torn-btn">Update</button>
-    //<button id="hideButton" class="torn-btn">Toggle Fire</button>`,
-    //    );
-
-    $("div.title:nth-child(1)").append(
-      `<button id="updateTrains" class="torn-btn">Update Trains</button>`,
-    );
-    $("#updateTrains").on("click", function () {
-      update();
-    });
+    if ($("#updateTrains").length == 0) {
+      $("div.title:nth-child(1)").append(
+        `<button id="updateTrains" class="torn-btn">Update Trains</button>`,
+      );
+      $("#updateTrains").on("click", function () {
+        update();
+      });
+    }
   }
-  updateTrainDisplay();
   setTimeout(insert, 1000);
 }
 
