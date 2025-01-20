@@ -38,7 +38,12 @@ if (!localStorage.getItem("racesNao")) {
   localStorage.setItem("racesNao", JSON.stringify({}));
 }
 
+if (!localStorage.getItem("chosenCarsNao")) {
+  localStorage.setItem("chosenCarsNao", JSON.stringify({}));
+}
+
 let races = JSON.parse(localStorage.getItem("racesNao"));
+let chosenCars = JSON.parse(localStorage.getItem("chosenCarsNao"));
 let lastRaceInfo;
 
 let rfc = getRFC();
@@ -190,3 +195,20 @@ $.ajax = function (options) {
 
   return originalAjax(options);
 };
+
+function checkForRace() {
+  const raceTitle =
+    $("div.enlisted-btn-wrap:nth-child(1)")?.text() || undefined;
+  if (raceTitle) {
+    showPreference(raceTitle);
+  }
+}
+
+function showPreference(raceTitle) {
+  if (chosenCars[raceTitle]) {
+    const link = chosenCars[raceTitle];
+    const carLink = document.createElement("a");
+    carLink.href = link;
+    $("div.enlisted-btn-wrap:nth-child(1)").append(carLink);
+  }
+}
