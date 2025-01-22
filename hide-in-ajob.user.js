@@ -23,23 +23,37 @@ const filterIcons = [
   "icon27",
   "icon83",
 ];
-function hide() {
-  $(".user-info-list-wrap > li:not([processed])").each(function () {
-    const icons = $("#iconTray > li", this);
 
-    $(this).attr("processed", true);
-    for (const iconN in icons) {
-      const icon = icons[iconN];
-      const iconId = icon.id;
-      if (!iconId) continue;
-      const iconNumber = iconId.slice(0, 6);
-      console.log(iconNumber);
-      if (filterIcons.includes(iconNumber)) {
-        $(this).remove();
-        return;
+const originalAjax = $.ajax;
+$.ajax = function (options) {
+  console.log("[HIDEEMP] :", options);
+  if (options.url.includes("page.php")) {
+    const originalSuccess = options.success;
+    options.success = function (response, textStatus, jqXHR) {
+      console.log("[HIDEEMP] Original Response:", response);
+      const newList = [];
+      if (response.list) {
+        for (const user of response.list) {
+          const iconsList = user.IconsList;
+          let shouldHide = false;
+          for (const icon of filterIcons) {
+            if (iconsList.includes(icon)) {
+              shouldHide = true;
+            }
+          }
+          if (!shouldHide) {
+            newList.push(user);
+          }
+        }
       }
-    }
-  });
-}
 
-setInterval(hide, 1000);
+      const modifiedResponse = { ...response, list: newList };
+      // Call the original success callback with the modified response
+      if (originalSuccess) {
+        originalSuccess(modifiedResponse, textStatus, jqXHR);
+      }
+    };
+  }
+
+  return originalAjax(options);
+};
