@@ -22,13 +22,14 @@ function insert() {
     setTimeout(insert, 500);
     return;
   }
-  $("ul[class^='stock_']").each(function () {
+  $("ul[class^='stock_']").each(function() {
     let sym = $("img", $(this)).attr("src").split("logos/")[1].split(".svg")[0];
     symbols.push(sym);
     // console.log($(this));
     stockId[sym] = $(this).attr("id");
     stocks[sym] = $("div[class^='price_']", $(this));
   });
+  symbols.sort();
   let container = `<div>
         <select name="stock" id="stockid"><option value=""></option>`;
   for (let sy of symbols) {
@@ -75,7 +76,7 @@ function vault() {
       stockId: stockId[symb],
       amount: amt,
     },
-    function (response) {
+    function(response) {
       // response = JSON.parse(response);
 
       $("#responseStock").html(response.success ? "Vaulted" : "Failed");
@@ -135,7 +136,7 @@ function withdraw() {
       stockId: stockId[symb],
       amount: amt,
     },
-    function (response) {
+    function(response) {
       // response = JSON.parse(response);
 
       $("#responseStock").html(response.success ? "Withdrawn" : "Failed");
